@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" ></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<script src = "/script.js" ></script>
+	<style>
+	table {
+	    border-collapse: collapse;
+	    width: 100%;
+	}
+
+	th, td {
+	    text-align: left;
+	    padding: 8px;
+	}
+
+	tr:nth-child(even){background-color: #f2f2f2}
+
+	th {
+	    background-color: #4CAF50;
+	    color: white;
+	}
+	</style>
+</head>
+
+<body ng-app = "LondonTour" >
+	<div ng-controller = "SearchController">
+
+    <div id="googleMap" style="width:100%;height:500px;"></div>
+
+		<div class="w3-container w3-blue">
+		  <h2>Position:</h2>
+		</div>
+
+		<form class="w3-container">
+		  <p>
+		  <label>Latitude:</label>
+		  <input class="w3-input" type="text" id = "latid" value="" ng-model="lat"></p>
+		  <p>
+		  <label>Longitude:</label>
+		  <input class="w3-input" type="text" id = "lngid" value="" ng-model="lng"></p>
+		</form>
+
+    <!-- <input type="hidden" name="lngname" id="lngid" />
+    <input type="text" id="PersonName" ng-model="target" value="" placeholder="Please type a name..."> -->
+
+		<script>
+		function myMap() {
+
+		  var mapOptions = {
+		    center: new google.maps.LatLng(51.508742,-0.120850),
+		    zoom:9,
+		    mapTypeId: google.maps.MapTypeId.ROADMAP
+		  };
+
+		  var map = new google.maps.Map(document.getElementById("googleMap"),mapOptions);
+
+		  var marker = {
+		    coords: {lat: 51.508742, lng: -0.120850},
+		    map: map,
+		  }
+
+		  addMarker(marker);
+
+		  google.maps.event.addListener(map, 'click', function(event){
+		        // Add marker
+		        addMarker({coords:event.latLng});
+		        document.getElementById('latid').value = event.latLng.lat();
+						document.getElementById('lngid').value = event.latLng.lng();
+		        console.log(event.latLng.lat());
+		        console.log(event.latLng.lng());
+		      });
+
+		  function addMarker(m){
+		        var gMarker = new google.maps.Marker({
+		          position:m.coords,
+		          map:map,
+		        });
+		  }
+		}
+		</script>
+
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGf6S4v7rjILmA5S-et3NtRBtqaaBzU3A&callback=myMap">
+		</script>
+
+		<button id="button" ng-click="clickMe(lat, lng)" class="button">
+			Click
+		</button>
+
+		  <span>&nbsp&nbsp&nbsp&nbsp</span>
+			<a href="https://localhost:5000/name">Search Attraction By Name!</a>
+			<span>&nbsp&nbsp&nbsp&nbsp</span>
+			<a href="https://localhost:5000/filter">Search Attraction Using Filter!</a>
+
+
+<hr>
+<h2>Attractions Table</h2>
+
+
+	<table id = "placetb">
+		<tr class="header">
+				<th style="width:10%;">Attraction ID</th>
+				<th style="width:10%;">Name</th>
+				<th style="width:10%;">Address</th>
+				<th style="width:10%;">Latitude</th>
+				<th style="width:10%;">longitude</th>
+		</tr>
+		<tr ng-repeat = "x in data" >
+			<td>{{x.id}}</td>
+			<td>{{x.name}}</td>
+			<td>{{x.address}}</td>
+			<td>{{x.lat}}</td>
+			<td>{{x.lng}}</td>
+		</tr>
+	</table>
+
+</div>
+
+</body>
+</html>
